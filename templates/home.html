@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Image Upload</title>
+  <style>
+    #preview {
+      max-width: 300px;
+      max-height: 300px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Image Upload</h1>
+
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" id="fileInput" accept="image/*" name="image">
+    <button onclick="takePicture()">Take Picture</button><br>
+    <button onclick="sendImageToDjango()">Upload Image</button>
+    <br>
+  </form>
+  <img id="preview" src="#" alt="Preview">
+
+
+  <p>{{classified}}</p>
+  <div>{{m|safe}}</div>
+
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    function takePicture() {
+      // Check if the browser supports the WebRTC API
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        // Request permission to use the camera
+        navigator.mediaDevices.getUserMedia({ video: true })
+          .then(function (stream) {
+            var video = document.createElement('video');
+            var fileInput = document.getElementById('fileInput');
+            var preview = document.getElementById('preview');
+
+            // Set the source of the video element to the camera stream
+            video.srcObject = stream;
+            video.play();
+
+            // Capture the image from the video stream
+            var captureImage = function () {
+              var canvas = document.createElement('canvas');
+              canvas.width = video.videoWidth;
+              canvas.height = video.videoHeight;
+              var context = canvas.getContext('2d');
+              context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+              // Convert the canvas image to a Data URL and set it as the source of the preview image
+              preview.src = canvas.toDataURL('image/' + file.type.split('/')[1]);
+
+              // Stop the video stream and remove the event listener
+              stream.getTracks().forEach(function (track) {
+                track.stop();
+              });
+              video.removeEventListener('loadeddata', captureImage);
+            };
+
+            // Capture the image when the video is loaded
+            video.addEventListener('loadeddata', captureImage);
+
+            // Set the file input value to empty to avoid conflicts
+            fileInput.value = '';
+          })
+          .catch(function (error) {
+            console.error('Error accessing the camera:', error);
+          });
+      } else {
+        console.error('getUserMedia() is not supported by your browser');
+      }
+    }
+
+    // Listen for changes in the file input and display the selected image
+    var fileInput = document.getElementById('fileInput');
+    fileInput.addEventListener('change', function (event) {
+      var file = event.target.files[0];
+      var preview = document.getElementById('preview');
+      var reader = new FileReader();
+
+      reader.onload = function () {
+        preview.src = reader.result;
+      };
+
+      if (file) {
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Function to send the captured or uploaded image to Django using AJAX
+    function sendImageToDjango() {
+      var image = document.getElementById('preview');
+      var formData = new FormData();
+      formData.append('image', image.src);
+
+
+      $.ajax({
+        url: '/home/',  // Replace with the URL of your Django view
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          console.log('Image uploaded successfully');
+        },
+        error: function (error) {
+          console.error('Error uploading image:', error);
+        }
+      });
+    }
+  </script>
+</body>
+
+</html>
