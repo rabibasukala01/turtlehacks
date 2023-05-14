@@ -25,21 +25,42 @@ def query(filename):
 # Create your views here.
 def make_maps():
     coordinates = [
-        [27.705194, 85.391806],
-        [27.649790, 85.403445],
-        [27.676529, 85.516931],
+        [48.586773, -107.802121],
+        [48.415872, -107.836715],
+        [52.004794, -106.804044],
+        [43.574346, -79.573363],
+        [43.571244, -79.574720],
+        [43.569942, -79.577262],
+        [43.570136, -79.568010],
+        [43.571623, -79.584946],
+        [43.582261, -79.591414],
+        [43.566270, -79.612333],
+        [43.545537, -79.600272],
+        [43.563424, -79.627759],
+        [85.403445, 27.649790],
+        [85.516931, 27.676529],
     ]
+    start_p = "85.403445,27.649790,"
+    end_p = "85.516931,27.676529"
+    url = f"https://api.openrouteservice.org/v2/directions/driving-car?api_key=5b3ce3597851110001cf6248f2b95ebb2fcc45cfb91bae62c6b3735c&start={start_p}&end={end_p}"
+    result = requests.get(url)
+    # print(result.json())
+    way_coordinates = result.json()["features"][0]["geometry"]["coordinates"]
 
     map = folium.Map(
-        location=[27.705194, 85.391806],
+        location=[43.5717165, -79.5715712],
         tiles="OpenStreetMap",
         zoom_start=14,
-        width="50%",
-        height="50%",
+        width="100%",
+        height="100%",
     )
+
     for coordinate in coordinates:
         folium.Marker(coordinate).add_to(map)
-    # folium.Marker(coordinate, popup="lmao", tooltip="click").add_to(map)
+
+    folium.PolyLine(
+        locations=[list(reversed(coord)) for coord in way_coordinates], color="blue"
+    ).add_to(map)
 
     # rendering map html
     map = map._repr_html_()
@@ -93,3 +114,17 @@ def home(request):
 #         return render( request, "upload_image.html",context)
 
 #     return render(request, "upload_image.html")
+
+
+@csrf_exempt
+def loc(request):
+    if request.method == "POST":
+        latitude = request.POST.get("latitude")
+        longitude = request.POST.get("longitude")
+        locality = request.POST.get("locality")
+        city = request.POST.get("city")
+
+        # Do something with the latitude and longitude data
+
+        print(latitude, longitude, locality, city)
+    return render(request, "loc.html")

@@ -1,33 +1,93 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 
 <head>
-  <title>Image Upload</title>
-  <style>
-    #preview {
-      max-width: 300px;
-      max-height: 300px;
-    }
-  </style>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+  <title>Trash snap </title>
 </head>
 
 <body>
-  <h1>Image Upload</h1>
+  <!-- nav -->
+  <nav class="navbar navbar-expand-lg navbar-light ">
+    <div class="container-fluid ">
+      <a class="navbar-brand" href="#"><img
+          src="https://media.discordapp.net/attachments/1106951172612440077/1107118962279448636/image.png?width=50&height=50"
+          alt=""></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">sign in </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Pricing </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Dashboard </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">About </a>
+          </li>
 
-  <form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    <input type="file" id="fileInput" accept="image/*" name="image">
-    <button name="image" onclick="takePicture()">Take Picture</button><br>
-    <button onclick="sendImageToDjango()">Upload Image</button>
-    <br>
-  </form>
-  <img id="preview" src="#" alt="Preview">
+        </ul>
+
+      </div>
+    </div>
+  </nav>
+
+  <!--  -->
+
+  <!-- image -->
+
+  <div>
+    <div class="row">
+      <div class="col-md justify-content-center" style="border: 1px solid green;">
+        <h1>Image Upload</h1>
+
+        <form method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+          <input type="file" id="fileInput" accept="image/*" name="image">
+          <button type="button" onclick="takePicture()" class="btn btn-primary btn-lg">Take Picture</button><br>
+          <button onclick="sendImageToDjango()" class="btn btn-lg find-state"
+            style="color: azure;background-color: green;">Upload Image</button>
+          <!-- <button onclick="sendImageToDjango()">Upload Image</button> -->
+          <br>
+        </form>
+        <img id="preview" src="#" alt="Preview">
+      </div>
+
+      <div class="col-md">
+        {{m|safe}}
+      </div>
+    </div>
+  </div><br>
+  <h2>The object is classified as <i>{{classified}}</i></h2>
+  </h2>
+  <h4></h4>
+  <br>
+  <br><br><br><br><br><br>
+  <br><br><br><br><br><br>
+  <br><br><br><br><br><br>
+  <br><br><br><br><br><br>
+  <br><br><br><br><br><br>
 
 
-  <p>{{classified}}</p>
-  <div>{{m|safe}}</div>
 
-  <!-- =======voiceflow ======-->
+
+  <!--=======voiceflow======-->
   <script type="text/javascript">
     (function (d, t) {
       var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
@@ -42,7 +102,10 @@
     })(document, 'script');
   </script>
 
-  <!-- ===================== -->
+  <!-- ==========voiceflow-end=========== -->
+
+
+
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
     function takePicture() {
@@ -109,6 +172,156 @@
 
     // Function to send the captured or uploaded image to Django using AJAX
     function sendImageToDjango() {
+
+      var image = document.getElementById('preview');
+      var formData = new FormData();
+      formData.append('image', image.src);
+
+
+      $.ajax({
+        url: '/home/',  // Replace with the URL of your Django view
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          console.log('Image uploaded successfully');
+        },
+        error: function (error) {
+          console.error('Error uploading image:', error);
+        }
+      });
+    }
+  </script>
+
+
+  <!-- Option 1: Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+
+</body>
+
+</html>
+
+
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Image Upload</title>
+  <style>
+    #preview {
+      max-width: 300px;
+      max-height: 300px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Image Upload</h1>
+
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" id="fileInput" accept="image/*" name="image">
+    <button name="image" onclick="takePicture()">Take Picture</button><br>
+    <button class="find-state" onclick="sendImageToDjango()">Upload Image</button>
+    <br>
+  </form>
+  <img id="preview" src="#" alt="Preview">
+
+
+  <p>{{classified}}</p>
+  <div>{{m|safe}}</div>
+
+  <!-- =======voiceflow ======-->
+  <script type="text/javascript">
+    (function (d, t) {
+      var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
+      v.onload = function () {
+        window.voiceflow.chat.load({
+          verify: { projectID: '645f7e79f59617000846aa6e' },
+          url: 'https://general-runtime.voiceflow.com',
+          versionID: 'production'
+        });
+      }
+      v.src = "https://cdn.voiceflow.com/widget/bundle.mjs"; v.type = "text/javascript"; s.parentNode.insertBefore(v, s);
+    })(document, 'script');
+  </script>
+
+  <!-- ==========voiceflow-end=========== -->
+
+
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    function takePicture() {
+      // Check if the browser supports the WebRTC API
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        // Request permission to use the camera
+        navigator.mediaDevices.getUserMedia({ video: true })
+          .then(function (stream) {
+            var video = document.createElement('video');
+            var fileInput = document.getElementById('fileInput');
+            var preview = document.getElementById('preview');
+
+            // Set the source of the video element to the camera stream
+            video.srcObject = stream;
+            video.play();
+
+            // Capture the image from the video stream
+            var captureImage = function () {
+              var canvas = document.createElement('canvas');
+              canvas.width = video.videoWidth;
+              canvas.height = video.videoHeight;
+              var context = canvas.getContext('2d');
+              context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+              // Convert the canvas image to a Data URL and set it as the source of the preview image
+              preview.src = canvas.toDataURL('image/' + file.type.split('/')[1]);
+
+              // Stop the video stream and remove the event listener
+              stream.getTracks().forEach(function (track) {
+                track.stop();
+              });
+              video.removeEventListener('loadeddata', captureImage);
+            };
+
+            // Capture the image when the video is loaded
+            video.addEventListener('loadeddata', captureImage);
+
+            // Set the file input value to empty to avoid conflicts
+            fileInput.value = '';
+          })
+          .catch(function (error) {
+            console.error('Error accessing the camera:', error);
+          });
+      } else {
+        console.error('getUserMedia() is not supported by your browser');
+      }
+    }
+
+    // Listen for changes in the file input and display the selected image
+    var fileInput = document.getElementById('fileInput');
+    fileInput.addEventListener('change', function (event) {
+      var file = event.target.files[0];
+      var preview = document.getElementById('preview');
+      var reader = new FileReader();
+
+      reader.onload = function () {
+        preview.src = reader.result;
+      };
+
+      if (file) {
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Function to send the captured or uploaded image to Django using AJAX
+    function sendImageToDjango() {
+
       var image = document.getElementById('preview');
       var formData = new FormData();
       formData.append('image', image.src);
