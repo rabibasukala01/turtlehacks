@@ -17,7 +17,7 @@
   <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     <input type="file" id="fileInput" accept="image/*" name="image">
-    <button onclick="takePicture()">Take Picture</button><br>
+    <button name="image" onclick="takePicture()">Take Picture</button><br>
     <button onclick="sendImageToDjango()">Upload Image</button>
     <br>
   </form>
@@ -27,7 +27,22 @@
   <p>{{classified}}</p>
   <div>{{m|safe}}</div>
 
+  <!-- =======voiceflow ======-->
+  <script type="text/javascript">
+    (function (d, t) {
+      var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
+      v.onload = function () {
+        window.voiceflow.chat.load({
+          verify: { projectID: '645f7e79f59617000846aa6e' },
+          url: 'https://general-runtime.voiceflow.com',
+          versionID: 'production'
+        });
+      }
+      v.src = "https://cdn.voiceflow.com/widget/bundle.mjs"; v.type = "text/javascript"; s.parentNode.insertBefore(v, s);
+    })(document, 'script');
+  </script>
 
+  <!-- ===================== -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
     function takePicture() {

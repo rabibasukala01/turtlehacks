@@ -45,32 +45,28 @@ def make_maps():
     map = map._repr_html_()
     return map
 
+
 @csrf_exempt
 def home(request):
     m = make_maps()
     if request.method == "POST":
         # print(request.FILES["image"])
         img_file = request.FILES["image"]
-        #but i like this way
+        # but i like this way
         with open("static/images/uploaded_image.jpg", "wb") as f:
             f.write(img_file.read())
 
         query_result = query("static/images/uploaded_image.jpg")
         # print(query_result[0]["label"])
-        print(query_result)
+        # print(query_result)
 
-        context={
-            
-            "classified":query_result[0]["label"],
+        context = {
+            "classified": query_result[0]["label"],
             "m": m,
-        
         }
-        return render(request, "home.html",context)
+        return render(request, "home.html", context)
 
-    return render(request, "home.html",{"m": m})
-
-
-
+    return render(request, "home.html", {"m": m})
 
 
 # @csrf_exempt
@@ -94,6 +90,6 @@ def home(request):
 #         context={
 #         "classified":query_result[0]["label"]
 #         }
-#         return render( request, "upload_image.html",context) 
+#         return render( request, "upload_image.html",context)
 
 #     return render(request, "upload_image.html")
